@@ -24,7 +24,7 @@ CONF_R_SENSE = "r_sense"
 
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(TMC2130Component),
-    cv.Required(CONF_CS_PIN): cv.pin_schema,
+    cv.Required(CONF_CS_PIN): cv.pin,
     cv.Required(CONF_R_SENSE): cv.float_,
     cv.Optional(CONF_TOFF, default=4): cv.int_range(min=0, max=15),
     cv.Optional(CONF_BLANK_TIME, default=24): cv.int_range(min=16, max=54),

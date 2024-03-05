@@ -1,5 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
+from esphome import pins
 from esphome.components import spi
 from esphome.const import CONF_ID, CONF_CS_PIN
 from esphome.core import coroutine
@@ -24,7 +25,7 @@ CONF_R_SENSE = "r_sense"
 
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(TMC2130Component),
-    cv.Required(CONF_CS_PIN): cv.pin,
+    cv.Required(CONF_CS_PIN): pins.gpio_output_pin_schema,
     cv.Required(CONF_R_SENSE): cv.float_,
     cv.Optional(CONF_TOFF, default=4): cv.int_range(min=0, max=15),
     cv.Optional(CONF_BLANK_TIME, default=24): cv.int_range(min=16, max=54),

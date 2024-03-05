@@ -22,10 +22,15 @@ CONF_SEMAX = "semax"
 CONF_SEDN = "sedn"
 CONF_SGT = "sgt"
 CONF_R_SENSE = "r_sense"
+CONF_STEP_PIN = "step_pin"
+CONF_DIR_PIN = "dir_pin"
 
 CONFIG_SCHEMA = cv.Schema({
     cv.GenerateID(): cv.declare_id(TMC2130Component),
     cv.Required(CONF_CS_PIN): pins.gpio_output_pin_schema,
+    cv.Required(CONF_STEP_PIN): pins.gpio_output_pin_schema,
+    cv.Required(CONF_DIR_PIN): pins.gpio_output_pin_schema,
+    cv.Required(CONF_RMS_CURRENT): cv.positive_int,
     cv.Required(CONF_R_SENSE): cv.float_,
     cv.Optional(CONF_TOFF, default=4): cv.int_range(min=0, max=15),
     cv.Optional(CONF_BLANK_TIME, default=24): cv.int_range(min=16, max=54),

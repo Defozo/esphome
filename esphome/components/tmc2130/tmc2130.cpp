@@ -68,10 +68,8 @@ void TMC2130Component::dump_config() {
 
 void TMC2130Component::set_speed(int speed) {
   // Adjust timer alarm based on speed
-  if (speed > max_speed_ && speed < min_speed_) {
-    uint32_t timer_speed = map(speed, 0, 100, min_speed_, max_speed_); // Map speed to timer range
-    timerAlarmWrite(this->timer_, timer_speed, true);
-  }
+  uint32_t timer_speed = map(speed, 0, 100, 0, 100); // Directly map speed to timer range without using max_speed_ and min_speed_
+  timerAlarmWrite(this->timer_, timer_speed, true);
 }
 
 void TMC2130Component::set_direction_forward(bool forward) {

@@ -62,11 +62,11 @@ void TMC2130Component::dump_config() {
   ESP_LOGCONFIG(TAG, "  - SGT: %d", this->sgt_);
 }
 
-void TMC2130Component::set_step_pin(GPIOPin *step_pin) {
+void TMC2130Component::set_step_pin(InternalGPIOPin *step_pin) {
   this->step_pin_ = step_pin;
 }
 
-void TMC2130Component::set_dir_pin(GPIOPin *dir_pin) {
+void TMC2130Component::set_dir_pin(InternalGPIOPin *dir_pin) {
   this->dir_pin_ = dir_pin;
 }
 

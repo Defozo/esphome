@@ -7,9 +7,9 @@ namespace tmc2130 {
 
 class TMC2130Component : public Component {
  public:
-  TMC2130Component(GPIOPin *cs_pin, float r_sense);
-  void set_step_pin(GPIOPin *step_pin);
-  void set_dir_pin(GPIOPin *dir_pin);
+  TMC2130Component(InternalGPIOPin *cs_pin, float r_sense);
+  void set_step_pin(InternalGPIOPin *step_pin);
+  void set_dir_pin(InternalGPIOPin *dir_pin);
   void setup() override;
   void dump_config() override;
   void set_toff(uint8_t toff);
@@ -27,7 +27,7 @@ class TMC2130Component : public Component {
   void set_speed(int speed);
   void enable_motor(bool enable);
   static void IRAM_ATTR on_timer();
-  GPIOPin *get_step_pin() const { return step_pin_; }
+  InternalGPIOPin *get_step_pin() const { return step_pin_; }
 
  protected:
   TMC2130Stepper driver_;

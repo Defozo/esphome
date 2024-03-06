@@ -53,7 +53,7 @@ async def to_code(config):
     await cg.register_component(var, config)
     await spi.register_spi_device(var, config)
 
-    cg.add_library('TMCStepper', '0.7.3')
+    # cg.add_library('TMCStepper', '0.7.3')
     cg.add(var.set_step_pin(step_pin))
     cg.add(var.set_dir_pin(dir_pin))
     cg.add(var.set_toff(config[CONF_TOFF]))

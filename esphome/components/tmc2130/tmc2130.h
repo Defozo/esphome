@@ -1,6 +1,6 @@
 #include "esphome/core/component.h"
 #include "esphome/core/hal.h"
-#include <TMCStepper.h>
+// #include <TMCStepper.h>
 
 namespace esphome {
 namespace tmc2130 {

@@ -7,6 +7,7 @@ namespace tmc2130 {
 
 class TMC2130Component : public Component {
  public:
+  TMC2130Component(uint8_t cs_pin, float r_sense); // Constructor declaration
   void setup() override;
   void dump_config() override;
   void set_toff(uint8_t toff);
@@ -21,6 +22,9 @@ class TMC2130Component : public Component {
   void set_sgt(int8_t sgt);
   void set_direction_forward(bool forward);
   void set_r_sense(float r_sense);
+  void set_speed(int speed);
+  void enable_motor(bool enable);
+  static void IRAM_ATTR on_timer();
 
  protected:
   TMC2130Stepper driver_;
@@ -36,6 +40,11 @@ class TMC2130Component : public Component {
   int8_t sgt_;
   bool motor_direction_{true};
   float r_sense_;
+  uint8_t cs_pin_; // Chip select pin
+  uint8_t en_pin_; // Enable pin
+  uint8_t step_pin_; // Step pin
+  uint8_t dir_pin_; // Direction pin
+  hw_timer_t *timer_{nullptr}; // Hardware timer for motor stepping
 };
 
 }  // namespace tmc2130

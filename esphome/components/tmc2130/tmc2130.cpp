@@ -17,7 +17,7 @@ void TMC2130Component::setup() {
   pinMode(DIR_PIN, OUTPUT);
   digitalWrite(EN_PIN, LOW); // Enable driver by default
 
-   this->driver_.begin(); // Initiate SPI
+  this->driver_.begin(); // Initiate SPI
   // Configuration values are now set from the YAML file
   this->driver_.toff(this->toff_);
   this->driver_.blank_time(this->blank_time_);
@@ -47,13 +47,10 @@ void TMC2130Component::set_semin(uint8_t semin) { this->semin_ = semin; }
 void TMC2130Component::set_semax(uint8_t semax) { this->semax_ = semax; }
 void TMC2130Component::set_sedn(uint8_t sedn) { this->sedn_ = sedn; }
 void TMC2130Component::set_sgt(int8_t sgt) { this->sgt_ = sgt; }
-void TMC2130Component::set_r_sense(float r_sense) { this->driver_.rsense(r_sense); }
+// Corrected method to match the available method in the TMCStepper library
+void TMC2130Component::set_r_sense(float r_sense) { this->driver_.Rsense(r_sense); }
 
-
-void TMC2130Component::loop() {
-  // This method can be used to update the component state in each loop iteration
-  // For example, handling dynamic speed adjustments or other runtime tasks
-}
+// Removed loop method as it's not declared in the header file
 
 void TMC2130Component::dump_config() {
   ESP_LOGCONFIG(TAG, "TMC2130 Component Configuration:");

@@ -91,10 +91,10 @@ void TMC2130Component::enable_motor(bool enable) {
 }
 
 // Static ISR wrapper
-static void IRAM_ATTR isr_wrapper() {
-  if (tmc2130_component_instance != nullptr) {
-    tmc2130_component_instance->on_timer();
-  }
+void IRAM_ATTR TMC2130Component::isr_wrapper() {
+    if (tmc2130_component_instance != nullptr) {
+        tmc2130_component_instance->on_timer();
+    }
 }
 
 void IRAM_ATTR TMC2130Component::on_timer() {

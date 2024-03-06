@@ -64,4 +64,3 @@ def to_code(config):
     cg.add(var.set_semax(config[CONF_SEMAX]))
     cg.add(var.set_sedn(config[CONF_SEDN]))
     cg.add(var.set_sgt(config[CONF_SGT]))
-    cg.add(var.set_r_sense(config[CONF_R_SENSE]))

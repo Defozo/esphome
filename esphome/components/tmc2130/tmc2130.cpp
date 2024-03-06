@@ -11,20 +11,15 @@ TMC2130Component::TMC2130Component(GPIOPin *cs_pin, float r_sense)
   : cs_pin_(cs_pin), r_sense_(r_sense), driver_(cs_pin_->get_pin(), r_sense) {
 
 }
-static void IRAM_ATTR on_timer(void *arg) {
-  auto step_pin = reinterpret_cast<uint8_t *>(arg);
-  digitalWrite(*step_pin, !digitalRead(*step_pin)); // Toggle the step pin
-}
 
 void TMC2130Component::setup() {
   ESP_LOGD(TAG, "Setting up TMC2130...");
-  en_pin_->pin_mode(OUTPUT);
-  step_pin_->pin_mode(OUTPUT);
-  dir_pin_->pin_mode(OUTPUT);
-  en_pin_->digital_write(LOW); // Enable driver by default
+  this->cs_pin_->pin_mode(gpio::FLAG_OUTPUT);
+  this->step_pin_->pin_mode(gpio::FLAG_OUTPUT);
+  this->dir_pin_->pin_mode(gpio::FLAG_OUTPUT);
+  this->cs_pin_->digital_write(true); // Enable driver by default
 
   this->driver_.begin(); // Initiate SPI
-  // Configuration values are now set from the YAML file
   this->driver_.toff(this->toff_);
   this->driver_.blank_time(this->blank_time_);
   this->driver_.rms_current(this->rms_current_); // Set motor RMS current
@@ -38,7 +33,7 @@ void TMC2130Component::setup() {
 
   // Setup timer
   this->timer_ = timerBegin(0, 80, true); // Use the first timer
-  timerAttachInterrupt(this->timer_, &on_timer, reinterpret_cast<void *>(&this->step_pin_));
+  timerAttachInterrupt(this->timer_, &on_timer, reinterpret_cast<void *>(this));
   timerAlarmWrite(this->timer_, 1000, true); // Set the alarm
   timerAlarmEnable(this->timer_); // Enable the alarm
 }
@@ -89,6 +84,11 @@ void TMC2130Component::set_direction_forward(bool forward) {
 void TMC2130Component::enable_motor(bool enable) {
   // Enable or disable motor by controlling en_pin_
   en_pin_->digital_write(!enable); // LOW to enable, HIGH to disable
+}
+
+static void IRAM_ATTR on_timer(void *arg) {
+  auto component = reinterpret_cast<TMC2130Component *>(arg);
+  digitalWrite(component->step_pin_->get_pin(), !digitalRead(component->step_pin_->get_pin())); // Toggle the step pin
 }
 
 }  // namespace tmc2130

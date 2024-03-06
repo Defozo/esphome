@@ -47,6 +47,7 @@ void TMC2130Component::set_semin(uint8_t semin) { this->semin_ = semin; }
 void TMC2130Component::set_semax(uint8_t semax) { this->semax_ = semax; }
 void TMC2130Component::set_sedn(uint8_t sedn) { this->sedn_ = sedn; }
 void TMC2130Component::set_sgt(int8_t sgt) { this->sgt_ = sgt; }
+void TMC2130Component::set_r_sense(float r_sense) { this->driver_.rsense(r_sense); }
 
 
 void TMC2130Component::loop() {

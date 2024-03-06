@@ -20,6 +20,7 @@ class TMC2130Component : public Component {
   void set_sedn(uint8_t sedn);
   void set_sgt(int8_t sgt);
   void set_direction_forward(bool forward);
+  void set_r_sense(float r_sense);
 
  protected:
   TMC2130Stepper driver_;
@@ -34,6 +35,7 @@ class TMC2130Component : public Component {
   uint8_t sedn_;
   int8_t sgt_;
   bool motor_direction_{true};
+  float r_sense_;
 };
 
 }  // namespace tmc2130

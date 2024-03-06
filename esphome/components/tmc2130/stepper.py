@@ -52,6 +52,8 @@ def to_code(config):
     yield spi.register_spi_device(var, config)
 
     cg.add_library('TMCStepper', '0.7.3')
+    cg.add(var.set_step_pin(config[CONF_STEP_PIN]))
+    cg.add(var.set_dir_pin(config[CONF_DIR_PIN]))
     cg.add(var.set_toff(config[CONF_TOFF]))
     cg.add(var.set_blank_time(config[CONF_BLANK_TIME]))
     cg.add(var.set_rms_current(config[CONF_RMS_CURRENT]))
@@ -62,3 +64,4 @@ def to_code(config):
     cg.add(var.set_semax(config[CONF_SEMAX]))
     cg.add(var.set_sedn(config[CONF_SEDN]))
     cg.add(var.set_sgt(config[CONF_SGT]))
+    cg.add(var.set_r_sense(config[CONF_R_SENSE]))

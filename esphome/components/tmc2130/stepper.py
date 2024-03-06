@@ -45,7 +45,9 @@ CONFIG_SCHEMA = cv.Schema({
 }).extend(cv.COMPONENT_SCHEMA).extend(spi.spi_device_schema())
 
 def to_code(config):
-    var = cg.new_Pvariable(config[CONF_ID], config[CONF_CS_PIN], config[CONF_R_SENSE])
+    cs_pin = yield cg.gpio_pin_expression(config[CONF_CS_PIN])
+    r_sense = config[CONF_R_SENSE]
+    var = cg.new_Pvariable(config[CONF_ID], cs_pin, r_sense)
     yield cg.register_component(var, config)
     yield spi.register_spi_device(var, config)
 

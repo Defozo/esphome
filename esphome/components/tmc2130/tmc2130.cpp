@@ -10,8 +10,9 @@ static const char *const TAG = "tmc2130";
 TMC2130Component::TMC2130Component(uint8_t cs_pin, float r_sense)
   : driver_(cs_pin, r_sense) {}
 
-static void IRAM_ATTR on_timer() {
-  digitalWrite(step_pin_, !digitalRead(step_pin_)); // Toggle the step pin
+static void IRAM_ATTR on_timer(void *arg) {
+  auto step_pin = reinterpret_cast<uint8_t *>(arg);
+  digitalWrite(*step_pin, !digitalRead(*step_pin)); // Toggle the step pin
 }
 
 void TMC2130Component::setup() {
@@ -36,7 +37,7 @@ void TMC2130Component::setup() {
 
   // Setup timer
   this->timer_ = timerBegin(0, 80, true); // Use the first timer
-  timerAttachInterrupt(this->timer_, &on_timer, true); // Attach the interrupt function
+  timerAttachInterrupt(this->timer_, &on_timer, reinterpret_cast<void *>(&this->step_pin_));
   timerAlarmWrite(this->timer_, 1000, true); // Set the alarm
   timerAlarmEnable(this->timer_); // Enable the alarm
 }

@@ -10,12 +10,16 @@ static const char *const TAG = "tmc2130";
 TMC2130Component::TMC2130Component(uint8_t cs_pin, float r_sense)
   : driver_(cs_pin, r_sense) {}
 
+static void IRAM_ATTR on_timer() {
+  digitalWrite(step_pin_, !digitalRead(step_pin_)); // Toggle the step pin
+}
+
 void TMC2130Component::setup() {
   ESP_LOGD(TAG, "Setting up TMC2130...");
-  pinMode(EN_PIN, OUTPUT);
-  pinMode(STEP_PIN, OUTPUT);
-  pinMode(DIR_PIN, OUTPUT);
-  digitalWrite(EN_PIN, LOW); // Enable driver by default
+  pinMode(en_pin_, OUTPUT);
+  pinMode(step_pin_, OUTPUT);
+  pinMode(dir_pin_, OUTPUT);
+  digitalWrite(en_pin_, LOW); // Enable driver by default
 
   this->driver_.begin(); // Initiate SPI
   // Configuration values are now set from the YAML file
@@ -32,7 +36,7 @@ void TMC2130Component::setup() {
 
   // Setup timer
   this->timer_ = timerBegin(0, 80, true); // Use the first timer
-  timerAttachInterrupt(this->timer_, &onTimer, true); // Attach the interrupt function
+  timerAttachInterrupt(this->timer_, &on_timer, true); // Attach the interrupt function
   timerAlarmWrite(this->timer_, 1000, true); // Set the alarm
   timerAlarmEnable(this->timer_); // Enable the alarm
 }
@@ -47,11 +51,6 @@ void TMC2130Component::set_semin(uint8_t semin) { this->semin_ = semin; }
 void TMC2130Component::set_semax(uint8_t semax) { this->semax_ = semax; }
 void TMC2130Component::set_sedn(uint8_t sedn) { this->sedn_ = sedn; }
 void TMC2130Component::set_sgt(int8_t sgt) { this->sgt_ = sgt; }
-// Corrected method to match the available method in the TMCStepper library
-void TMC2130Component::set_r_sense(float r_sense) { this->driver_.Rsense(r_sense); }
-
-// Removed loop method as it's not declared in the header file
-
 void TMC2130Component::dump_config() {
   ESP_LOGCONFIG(TAG, "TMC2130 Component Configuration:");
   ESP_LOGCONFIG(TAG, "  - Toff: %u", this->toff_);
@@ -68,24 +67,20 @@ void TMC2130Component::dump_config() {
 
 void TMC2130Component::set_speed(int speed) {
   // Adjust timer alarm based on speed
-  if (speed > MAX_SPEED && speed < MIN_SPEED) {
-    uint32_t timer_speed = map(speed, 0, 100, MIN_SPEED, MAX_SPEED); // Map speed to timer range
+  if (speed > max_speed_ && speed < min_speed_) {
+    uint32_t timer_speed = map(speed, 0, 100, min_speed_, max_speed_); // Map speed to timer range
     timerAlarmWrite(this->timer_, timer_speed, true);
   }
 }
 
 void TMC2130Component::set_direction_forward(bool forward) {
   motor_direction_ = forward;
-  digitalWrite(DIR_PIN, motor_direction_ ? HIGH : LOW); // Set direction
+  digitalWrite(dir_pin_, motor_direction_ ? HIGH : LOW); // Set direction
 }
 
 void TMC2130Component::enable_motor(bool enable) {
-  // Enable or disable motor by controlling EN_PIN
-  digitalWrite(EN_PIN, !enable); // LOW to enable, HIGH to disable
-}
-
-static void IRAM_ATTR onTimer() {
-  digitalWrite(STEP_PIN, !digitalRead(STEP_PIN)); // Toggle the step pin
+  // Enable or disable motor by controlling en_pin_
+  digitalWrite(en_pin_, !enable); // LOW to enable, HIGH to disable
 }
 
 }  // namespace tmc2130

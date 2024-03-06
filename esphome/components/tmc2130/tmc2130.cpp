@@ -88,7 +88,8 @@ void TMC2130Component::enable_motor(bool enable) {
 
 static void IRAM_ATTR on_timer(void *arg) {
   auto component = reinterpret_cast<TMC2130Component *>(arg);
-  digitalWrite(component->step_pin_->get_pin(), !digitalRead(component->step_pin_->get_pin())); // Toggle the step pin
+  bool current_state = digitalRead(component->step_pin_->get_pin());
+  component->step_pin_->digital_write(!current_state); // Toggle the step pin
 }
 
 }  // namespace tmc2130

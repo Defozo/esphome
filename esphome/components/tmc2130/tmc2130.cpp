@@ -7,9 +7,9 @@ namespace tmc2130 {
 
 static const char *const TAG = "tmc2130";
 
-TMC2130Component::TMC2130Component(uint8_t cs_pin, float r_sense)
-  : driver_(cs_pin, r_sense) {}
-
+TMC2130Component::TMC2130Component(GPIOPin *cs_pin, float r_sense) : cs_pin_(cs_pin), r_sense_(r_sense) {
+  driver_(cs_pin, r_sense);
+}
 static void IRAM_ATTR on_timer(void *arg) {
   auto step_pin = reinterpret_cast<uint8_t *>(arg);
   digitalWrite(*step_pin, !digitalRead(*step_pin)); // Toggle the step pin
@@ -66,11 +66,11 @@ void TMC2130Component::dump_config() {
   ESP_LOGCONFIG(TAG, "  - SGT: %d", this->sgt_);
 }
 
-void TMC2130Component::set_step_pin(uint8_t step_pin) {
+void TMC2130Component::set_step_pin(GPIOPin *step_pin) {
   this->step_pin_ = step_pin;
 }
 
-void TMC2130Component::set_dir_pin(uint8_t dir_pin) {
+void TMC2130Component::set_dir_pin(GPIOPin *dir_pin) {
   this->dir_pin_ = dir_pin;
 }
 

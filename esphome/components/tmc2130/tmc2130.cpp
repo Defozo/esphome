@@ -31,10 +31,10 @@ void TMC2130Component::setup() {
   this->driver_.sgt(this->sgt_);
 
   // Setup timer
-  this->timer_ = timerBegin(0, 80, true); // Use the first timer
-  timerAttachInterrupt(this->timer_, &onTimer, true); // Attach the interrupt function
-  timerAlarmWrite(this->timer_, 1000, true); // Set the alarm
-  timerAlarmEnable(this->timer_); // Enable the alarm
+  // this->timer_ = timerBegin(0, 80, true); // Use the first timer
+  // timerAttachInterrupt(this->timer_, &onTimer, true); // Attach the interrupt function
+  // timerAlarmWrite(this->timer_, 1000, true); // Set the alarm
+  // timerAlarmEnable(this->timer_); // Enable the alarm
 }
 
 void TMC2130Component::set_toff(uint8_t toff) { this->toff_ = toff; }
@@ -87,9 +87,9 @@ void TMC2130Component::enable_motor(bool enable) {
   digitalWrite(EN_PIN, !enable); // LOW to enable, HIGH to disable
 }
 
-static void IRAM_ATTR onTimer() {
-  digitalWrite(STEP_PIN, !digitalRead(STEP_PIN)); // Toggle the step pin
-}
+// static void IRAM_ATTR onTimer() {
+//   digitalWrite(STEP_PIN, !digitalRead(STEP_PIN)); // Toggle the step pin
+// }
 
 }  // namespace tmc2130
 }  // namespace esphome

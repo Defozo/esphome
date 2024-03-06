@@ -27,6 +27,7 @@ class TMC2130Component : public Component {
   void set_speed(int speed);
   void enable_motor(bool enable);
   static void IRAM_ATTR on_timer();
+  GPIOPin *get_step_pin() const { return step_pin_; }
 
  protected:
   TMC2130Stepper driver_;

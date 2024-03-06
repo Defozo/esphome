@@ -66,6 +66,14 @@ void TMC2130Component::dump_config() {
   ESP_LOGCONFIG(TAG, "  - SGT: %d", this->sgt_);
 }
 
+void TMC2130Component::set_step_pin(uint8_t step_pin) {
+  this->step_pin_ = step_pin;
+}
+
+void TMC2130Component::set_dir_pin(uint8_t dir_pin) {
+  this->dir_pin_ = dir_pin;
+}
+
 void TMC2130Component::set_speed(int speed) {
   // Adjust timer alarm based on speed
   uint32_t timer_speed = map(speed, 0, 100, 0, 100); // Directly map speed to timer range without using max_speed_ and min_speed_

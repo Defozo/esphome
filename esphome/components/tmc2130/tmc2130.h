@@ -24,6 +24,8 @@ class TMC2130Component : public Component {
   void set_r_sense(float r_sense);
   void set_speed(int speed);
   void enable_motor(bool enable);
+  void set_step_pin(uint8_t step_pin);
+  void set_dir_pin(uint8_t dir_pin);
   static void IRAM_ATTR on_timer();
 
  protected:

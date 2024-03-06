@@ -18,10 +18,10 @@ static void IRAM_ATTR on_timer(void *arg) {
 
 void TMC2130Component::setup() {
   ESP_LOGD(TAG, "Setting up TMC2130...");
-  pinMode(en_pin_, OUTPUT);
-  pinMode(step_pin_, OUTPUT);
-  pinMode(dir_pin_, OUTPUT);
-  digitalWrite(en_pin_, LOW); // Enable driver by default
+  en_pin_->pin_mode(OUTPUT);
+  step_pin_->pin_mode(OUTPUT);
+  dir_pin_->pin_mode(OUTPUT);
+  en_pin_->digital_write(LOW); // Enable driver by default
 
   this->driver_.begin(); // Initiate SPI
   // Configuration values are now set from the YAML file
@@ -83,12 +83,12 @@ void TMC2130Component::set_speed(int speed) {
 
 void TMC2130Component::set_direction_forward(bool forward) {
   motor_direction_ = forward;
-  digitalWrite(dir_pin_, motor_direction_ ? HIGH : LOW); // Set direction
+  dir_pin_->digital_write(motor_direction_ ? HIGH : LOW); // Set direction
 }
 
 void TMC2130Component::enable_motor(bool enable) {
   // Enable or disable motor by controlling en_pin_
-  digitalWrite(en_pin_, !enable); // LOW to enable, HIGH to disable
+  en_pin_->digital_write(!enable); // LOW to enable, HIGH to disable
 }
 
 }  // namespace tmc2130

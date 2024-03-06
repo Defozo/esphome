@@ -44,16 +44,18 @@ CONFIG_SCHEMA = cv.Schema({
     cv.Optional(CONF_SGT, default=7): cv.int_range(min=-64, max=63),
 }).extend(cv.COMPONENT_SCHEMA).extend(spi.spi_device_schema())
 
-def to_code(config):
-    cs_pin = yield cg.gpio_pin_expression(config[CONF_CS_PIN])
+async def to_code(config):
+    cs_pin = await cg.gpio_pin_expression(config[CONF_CS_PIN])
+    step_pin = await cg.gpio_pin_expression(config[CONF_STEP_PIN])
+    dir_pin = await cg.gpio_pin_expression(config[CONF_DIR_PIN])
     r_sense = config[CONF_R_SENSE]
     var = cg.new_Pvariable(config[CONF_ID], cs_pin, r_sense)
-    yield cg.register_component(var, config)
-    yield spi.register_spi_device(var, config)
+    await cg.register_component(var, config)
+    await spi.register_spi_device(var, config)
 
     cg.add_library('TMCStepper', '0.7.3')
-    cg.add(var.set_step_pin(config[CONF_STEP_PIN]))
-    cg.add(var.set_dir_pin(config[CONF_DIR_PIN]))
+    cg.add(var.set_step_pin(step_pin))
+    cg.add(var.set_dir_pin(dir_pin))
     cg.add(var.set_toff(config[CONF_TOFF]))
     cg.add(var.set_blank_time(config[CONF_BLANK_TIME]))
     cg.add(var.set_rms_current(config[CONF_RMS_CURRENT]))

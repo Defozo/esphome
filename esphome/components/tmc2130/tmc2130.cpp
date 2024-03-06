@@ -97,10 +97,10 @@ static void IRAM_ATTR isr_wrapper() {
   }
 }
 
-// Modified on_timer to use instance method
-void TMC2130Component::on_timer() {
-  bool current_state = this->get_step_pin()->digital_read();
-  this->get_step_pin()->digital_write(!current_state); // Toggle the step pin
+void IRAM_ATTR TMC2130Component::on_timer() {
+    if (tmc2130_component_instance == nullptr) return;
+    bool current_state = tmc2130_component_instance->get_step_pin()->digital_read();
+    tmc2130_component_instance->get_step_pin()->digital_write(!current_state); // Toggle the step pin
 }
 
 }  // namespace tmc2130

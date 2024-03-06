@@ -7,6 +7,9 @@ namespace tmc2130 {
 
 static const char *const TAG = "tmc2130";
 
+// Static pointer for ISR context
+static TMC2130Component *tmc2130_component_instance = nullptr;
+
 TMC2130Component::TMC2130Component(InternalGPIOPin *cs_pin, float r_sense) 
   : cs_pin_(cs_pin), r_sense_(r_sense), driver_(cs_pin_->get_pin(), r_sense) {
 
@@ -33,7 +36,8 @@ void TMC2130Component::setup() {
 
   // Setup timer
   this->timer_ = timerBegin(0, 80, true); // Use the first timer
-  timerAttachInterrupt(this->timer_, &on_timer, reinterpret_cast<void *>(this));
+  tmc2130_component_instance = this; // Set static instance pointer for ISR context
+  timerAttachInterrupt(this->timer_, &TMC2130Component::isr_wrapper, true);
   timerAlarmWrite(this->timer_, 1000, true); // Set the alarm
   timerAlarmEnable(this->timer_); // Enable the alarm
 }
@@ -86,10 +90,17 @@ void TMC2130Component::enable_motor(bool enable) {
   en_pin_->digital_write(!enable); // LOW to enable, HIGH to disable
 }
 
-static void IRAM_ATTR on_timer(void *arg) {
-  auto *component = static_cast<TMC2130Component *>(arg);
-  bool current_state = component->step_pin_->digital_read();
-  component->step_pin_->digital_write(!current_state); // Toggle the step pin
+// Static ISR wrapper
+static void IRAM_ATTR isr_wrapper() {
+  if (tmc2130_component_instance != nullptr) {
+    tmc2130_component_instance->on_timer();
+  }
+}
+
+// Modified on_timer to use instance method
+void TMC2130Component::on_timer() {
+  bool current_state = this->get_step_pin()->digital_read();
+  this->get_step_pin()->digital_write(!current_state); // Toggle the step pin
 }
 
 }  // namespace tmc2130

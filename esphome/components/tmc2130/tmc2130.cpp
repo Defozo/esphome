@@ -86,7 +86,7 @@ void TMC2130Component::enable_motor(bool enable) {
   en_pin_->digital_write(!enable); // LOW to enable, HIGH to disable
 }
 
-static void IRAM_ATTR on_timer(void *arg) {
+void IRAM_ATTR esphome::tmc2130::TMC2130Component::on_timer() {
   auto component = reinterpret_cast<TMC2130Component *>(arg);
   bool current_state = component->get_step_pin()->digital_read();
   component->get_step_pin()->digital_write(!current_state); // Toggle the step pin

@@ -7,7 +7,7 @@ namespace tmc2130 {
 
 static const char *const TAG = "tmc2130";
 
-TMC2130Component::TMC2130Component(GPIOPin *cs_pin, float r_sense) 
+TMC2130Component::TMC2130Component(InternalGPIOPin *cs_pin, float r_sense) 
   : cs_pin_(cs_pin), r_sense_(r_sense), driver_(cs_pin_->get_pin(), r_sense) {
 
 }

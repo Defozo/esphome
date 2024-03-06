@@ -43,10 +43,10 @@ class TMC2130Component : public Component {
   int8_t sgt_;
   bool motor_direction_{true};
   float r_sense_;
-  GPIOPin *en_pin_;
-  GPIOPin *cs_pin_;
-  GPIOPin *step_pin_;
-  GPIOPin *dir_pin_;
+  InternalGPIOPin *en_pin_;
+  InternalGPIOPin *cs_pin_;
+  InternalGPIOPin *step_pin_;
+  InternalGPIOPin *dir_pin_;
   hw_timer_t *timer_{nullptr}; // Hardware timer for motor stepping
 };
 
